@@ -1,0 +1,103 @@
+#include<GLUT/glut.h>
+#include<iostream>
+void draw(){
+    GLfloat x1=350,y1=100,x2=350,y2=200;
+    GLfloat m,x,y,t,p,dx,dy;
+    glClear(GL_COLOR_BUFFER_BIT);
+    if((x2-x1)==0){
+        m=(y2-y1);
+    }
+    else{
+        m=(y2-y1)/(x2-x1);
+    }
+    if(fabs(m)<1){
+        if(x1>x2){
+            t=x1;
+            x1=x2;
+            x2=t;
+            t=y1;
+            y1=y2;
+            y2=t;
+        }
+        dx=fabs(x2-x1);
+        dy=fabs(y2-y1);
+        p=2*dy-dx;
+        x=x1;
+        y=y1;
+        glBegin(GL_POINTS);
+        while(x<=x2)
+        {
+            glVertex2f(x,y);
+            x=x+1;
+            if(p>=0){
+                if(m<1){
+                    y=y+1;
+                }
+                else{
+                    y=y-1;
+                }
+                p=p+2*dy-2*dx;
+            }
+            else{
+                y=y;
+                p=p+2*dy;
+            }
+        }
+        glEnd();
+    }
+    if(fabs(m)>=1){
+        if(y1>y2){
+            t=x1;
+            x1=x2;
+            x2=t;
+            t=y1;
+            y1=y2;
+            y2=t;
+        }
+        dx=fabs(x2-x1);
+        dy=fabs(y2-y1);
+        p=2*dx-dy;
+        x=x1;
+        y=y1;
+        glBegin(GL_POINTS);
+        while(y<=y2)
+        {
+            glVertex2f(x,y);
+            y=y+1;
+            if(p>=0){
+                if(m>=1){
+                    x=x+1;
+                }
+                else{
+                    x=x-1;
+                }
+                p=p+2*dx-2*dy;
+            }
+            else{
+                x=x;
+                p=p+2*dx;
+            }
+        }
+        glEnd();
+    }
+    glFlush();
+
+
+}
+void init(){
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0,500,0,500);
+    glMatrixMode(GL_MODELVIEW);
+}
+int main(int argc,char ** argv){
+    glutInit(&argc,argv);
+    glutInitWindowSize(600,600);
+    glutInitWindowPosition(0,0);
+    glutInitDisplayMode(GLUT_RGB|GLUT_SINGLE);
+    glutCreateWindow("bla");
+    init();
+    glutDisplayFunc(draw);
+    glutMainLoop();
+    return 0;
+}
